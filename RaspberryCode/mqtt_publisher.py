@@ -14,6 +14,39 @@ import time
 
 import jwt
 import paho.mqtt.client as mqtt
+from time import gmtime, strftime
+from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
+from threading import Thread
+from time import sleep
+
+x=3
+
+def threaded_function():
+    while True:
+        t = strftime("%H:%M", gmtime())
+        message = 'Time:' + t
+
+        sense.show_message(message, scroll_speed=(0.08), text_colour=[176, 224, 230], back_colour=[0, 0, 0])
+        sense.clear()
+
+        temp = sense.get_temperature()
+        message = 'Temp: %.2f ' % (temp)
+
+        sense.show_message(message, scroll_speed=(0.08), text_colour=[200, 0, 200], back_colour=[0, 0, 0])
+        sense.clear()
+
+
+def pushed_left(event):
+    global x
+    if event.action != ACTION_RELEASED:
+        print('LEFT')
+
+def pushed_right(event):
+    global x
+    if event.action != ACTION_RELEASED:
+        print('RIGHT')
+
+sense = SenseHat()
 
 project_id = 'universalclockandweather'  # Enter your project ID here
 registry_id = 'raspberry123'  # Enter your Registry ID here
@@ -28,6 +61,13 @@ mqtt_bridge_hostname = 'mqtt.googleapis.com'
 mqtt_bridge_port = 443  # port 8883 is blocked in BGU network
 mqtt_topic = '/devices/{}/{}'.format(device_id, 'events')  # Published messages go to the 'events' topic that is bridged to pubsub by Google
 ###
+
+############ Joystick listner##########
+sense.stick.direction_left = pushed_left
+sense.stick.direction_right = pushed_right
+
+
+
 
 
 def create_jwt():
@@ -53,6 +93,7 @@ def create_jwt():
         # The audience field should always be set to the GCP project id.
         'aud': project_id
     }
+
 
     # Read the private key file.
     with open(private_key_file, 'r') as f:
@@ -117,7 +158,11 @@ client.loop_start()
 
 #TODO
 # Publish num_messages mesages to the MQTT bridge once per second.
+thread = Thread(target=threaded_function)
+thread.start()
+thread.join()
 for i in range(3):
+
     payload = 'Message {} Time {}'.format(
         i, str(datetime.datetime.now()))
     print('Publishing Message {}'.format(i))
