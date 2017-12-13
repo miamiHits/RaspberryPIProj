@@ -19,9 +19,12 @@ from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
 from threading import Thread
 from time import sleep
 
-x=3
+tempToServer=0
+mesaggeFromServer=0
+sidePress=0
 
 def threaded_function():
+    global tempToServer
     while True:
         t = strftime("%H:%M", gmtime())
         message = 'Time:' + t
@@ -30,6 +33,7 @@ def threaded_function():
         sense.clear()
 
         temp = sense.get_temperature()
+        tempToServer = temp
         message = 'Temp: %.2f ' % (temp)
 
         sense.show_message(message, scroll_speed=(0.08), text_colour=[200, 0, 200], back_colour=[0, 0, 0])
@@ -37,13 +41,17 @@ def threaded_function():
 
 
 def pushed_left(event):
-    global x
+    global sidePress
     if event.action != ACTION_RELEASED:
+        sidePress = 'left'
         print('LEFT')
+        # = sidePress, tempToServer
+        #print(payload)
 
 def pushed_right(event):
-    global x
+    global sidePress
     if event.action != ACTION_RELEASED:
+        sidePress = 'right'
         print('RIGHT')
 
 sense = SenseHat()
@@ -163,8 +171,7 @@ thread.start()
 thread.join()
 for i in range(3):
 
-    payload = 'Message {} Time {}'.format(
-        i, str(datetime.datetime.now()))
+    payload = sidePress,tempToServer
     print('Publishing Message {}'.format(i))
 
     # Publish "payload" to the MQTT topic. qos=1 means at least once
