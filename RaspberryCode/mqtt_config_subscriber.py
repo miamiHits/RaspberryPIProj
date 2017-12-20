@@ -1,3 +1,13 @@
+# Created by Omer Shwartz (www.omershwartz.com)
+#
+# This script uses device credentials to subscribe to the device configuration topic of the MQTT broker residing in
+# Google Cloud.
+# Using this code a device can receive configuration from the server.
+#
+# This file may contain portions of cloudiot_mqtt_example.py licensed to Google
+# under the Apache License, Version 2.0. The original version can be found in
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iot/api-client/mqtt_example/cloudiot_mqtt_example.py
+#
 ############################################################
 
 import datetime
@@ -6,7 +16,7 @@ import jwt
 import paho.mqtt.client as mqtt
 
 project_id = 'universalclockandweather'  # Enter your project ID here
-registry_id = 'raspberry123'  # Enter your Registry ID here
+registry_id = 'raspberrym123'  # Enter your Registry ID here
 device_id = 'rasp123'  # Enter your Device ID here
 ca_certs = 'roots.pem'  # The location of the Google Internet Authority certificate, can be downloaded from https://pki.google.com/roots.pem
 private_key_file = 'rsa_private.pem'  # The location of the private key associated to this device
@@ -68,6 +78,9 @@ def on_connect(client, unused_userdata, unused_flags, rc):
 
 def on_message(unused_client, unused_userdata, msg):
     """Callback for when a message is received."""
+    text_file = open("serverFiles/serverUpdates.txt", "w")
+    text_file.write(msg.payload)
+    text_file.close()
     print ("Received", msg.topic, msg.qos, msg.payload)
 
 
