@@ -1,17 +1,6 @@
-# Created by Omer Shwartz (www.omershwartz.com)
-#
-# This script uses device credentials to publish events to the MQTT broker residing in Google Cloud.
-# Using this code a device can 'talk' to the server.
-#
-# This file may contain portions of cloudiot_mqtt_example.py licensed to Google
-# under the Apache License, Version 2.0. The original version can be found in
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iot/api-client/mqtt_example/cloudiot_mqtt_example.py
-#
-############################################################
-
 import datetime
 import time
-import os, filecmp, md5
+import os
 
 import jwt
 import paho.mqtt.client as mqtt
@@ -27,7 +16,6 @@ device_id = 'rasp123'  # Enter your Device ID here
 ca_certs = 'roots.pem'  # The location of the Google Internet Authority certificate, can be downloaded from https://pki.google.com/roots.pem
 private_key_file = 'rsa_private.pem'  # The location of the private key associated to this device
 
-# Unless you know what you are doing, the following values should not be changed
 cloud_region = 'us-central1'
 algorithm = 'RS256'
 mqtt_bridge_hostname = 'mqtt.googleapis.com'
@@ -196,27 +184,27 @@ while True:
         thread.start()
         thread.join()
 
-    client.loop_start()
+
     # Start the network loop.
     # Publish num_messages mesages to the MQTT bridge once per second.
-    for i in range(1):
-        temp = sense.get_temperature()
-        tempToServer = '%.2f' % temp
-        t = strftime("%H:%M", gmtime())
-        if sidePress == 0:
-            break;
+    client.loop_start()
+    temp = sense.get_temperature()
+    tempToServer = '%.2f' % temp
+    t = strftime("%H:%M", gmtime())
+    if sidePress == 0:
+        break;
 
-        payload = sidePress + "," + tempToServer + "," +t
+    payload = sidePress + "," + tempToServer + "," +t
 
-        print('Publishing Message {}'.format(i))
-        print (payload)
-        # Publish "payload" to the MQTT topic. qos=1 means at least once
-        # delivery. Cloud IoT Core also supports qos=0 for at most once
-        # delivery.
-        client.publish(mqtt_topic, payload, qos=1)
+    print('Publishing Message')
+    print (payload)
+    # Publish "payload" to the MQTT topic. qos=1 means at least once
+    # delivery. Cloud IoT Core also supports qos=0 for at most once
+    # delivery.
+    client.publish(mqtt_topic, payload, qos=1)
 
-        # Send events every second
-        time.sleep(1)
+    # Send events every second
+    time.sleep(1)
 
     # End the network loop and finish.
     client.loop_stop()

@@ -1,15 +1,3 @@
-# Created by Omer Shwartz (www.omershwartz.com)
-#
-# This script uses device credentials to subscribe to the device configuration topic of the MQTT broker residing in
-# Google Cloud.
-# Using this code a device can receive configuration from the server.
-#
-# This file may contain portions of cloudiot_mqtt_example.py licensed to Google
-# under the Apache License, Version 2.0. The original version can be found in
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iot/api-client/mqtt_example/cloudiot_mqtt_example.py
-#
-############################################################
-
 import datetime
 
 import jwt
@@ -21,7 +9,6 @@ device_id = 'rasp123'  # Enter your Device ID here
 ca_certs = 'roots.pem'  # The location of the Google Internet Authority certificate, can be downloaded from https://pki.google.com/roots.pem
 private_key_file = 'rsa_private.pem'  # The location of the private key associated to this device
 
-# Unless you know what you are doing, the following values should not be changed
 cloud_region = 'us-central1'
 algorithm = 'RS256'
 mqtt_bridge_hostname = 'mqtt.googleapis.com'

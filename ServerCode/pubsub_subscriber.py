@@ -1,14 +1,4 @@
-# Created by Omer Shwartz (www.omershwartz.com)
-#
-# This script uses service credentials to subscribe to a topic of the Pub/Sub broker residing in
-# Google Cloud.
-# Using this code a server can receive messages from the device.
-#
-# This file may contain portions of cloudiot_mqtt_example.py licensed to Google
-# under the Apache License, Version 2.0. The original version can be found in
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iot/api-client/mqtt_example/cloudiot_mqtt_example.py
-#
-############################################################
+
 
 import time
 import os
